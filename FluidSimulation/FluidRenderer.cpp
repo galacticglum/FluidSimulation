@@ -2,6 +2,8 @@
 #include "Window.h"
 #include "Random.h"
 
+#include "Input.h"
+
 FluidRenderer::FluidRenderer(): m_TextureWidth(0), m_TextureHeight(0)
 {
     m_ClearProgramShader = Shader("Assets/Shaders/base.vert", "Assets/Shaders/clear.frag");
@@ -15,7 +17,7 @@ FluidRenderer::FluidRenderer(): m_TextureWidth(0), m_TextureHeight(0)
     m_GradientProgramShader = Shader("Assets/Shaders/base.vert", "Assets/Shaders/gradient.frag");
 }
 
-void FluidRenderer::Update(float deltaTime)
+void FluidRenderer::Update(const float deltaTime)
 {
     if(!m_SplatStack.empty())
     {
@@ -24,9 +26,91 @@ void FluidRenderer::Update(float deltaTime)
 
         BatchSplats(size);
     }
+
+    m_AdvectionProgramShader.Bind();
+    m_AdvectionProgramShader.SetUniform("texelSize", Vector2f(1.0f / m_TextureWidth, 1.0f / m_TextureHeight));
+    m_AdvectionProgramShader.SetUniform("velocity", m_VelocityFrameBufferObject.GetPrimaryFrameBuffer().TextureId);
+    m_AdvectionProgramShader.SetUniform("source", m_VelocityFrameBufferObject.GetPrimaryFrameBuffer().TextureId);
+    m_AdvectionProgramShader.SetUniform("dt", deltaTime);
+    m_AdvectionProgramShader.SetUniform("dissipation", Settings.VelocityDissipation);
+
+    Blit(m_VelocityFrameBufferObject.GetSecondaryFrameBuffer());
+    m_VelocityFrameBufferObject.Swap();
+
+    m_AdvectionProgramShader.SetUniform("velocity", m_VelocityFrameBufferObject.GetPrimaryFrameBuffer().TextureId);
+    m_AdvectionProgramShader.SetUniform("source", m_DensityFrameBufferObject.GetPrimaryFrameBuffer().TextureId);
+    m_AdvectionProgramShader.SetUniform("dissipation", Settings.DensityDissipation);
+
+    Blit(m_DensityFrameBufferObject.GetSecondaryFrameBuffer());
+    m_DensityFrameBufferObject.Swap();
+    
+    if(Input::GetMouseButtonDown(MouseButton::MOUSE_BUTTON_LEFT))
+    {
+        const Vector2f mousePosition = Input::GetMousePosition();
+        m_PreviousMousePosition = mousePosition;
+
+        const Vector2f direction((mousePosition - m_PreviousMousePosition) * 10.0f);
+        const Vector4f colour = Random::RGB(0) * 0.2f;
+
+        UpdateSplat(mousePosition, direction, colour);
+    }
+
+    m_CurlProgramShader.Bind();
+    m_CurlProgramShader.SetUniform("texelSize", Vector2f(1.0f / m_TextureWidth, 1.0f / m_TextureHeight));
+    m_CurlProgramShader.SetUniform("velocity", m_VelocityFrameBufferObject.GetPrimaryFrameBuffer().TextureId);
+    
+    Blit(m_CurlFrameBufferObject);
+
+    m_VorticityProgramShader.Bind();
+    m_VorticityProgramShader.SetUniform("texelSize", Vector2f(1.0f / m_TextureWidth, 1.0f / m_TextureHeight));
+    m_VorticityProgramShader.SetUniform("velocity", m_VelocityFrameBufferObject.GetPrimaryFrameBuffer().TextureId);
+    m_VorticityProgramShader.SetUniform("curlSampler", m_CurlFrameBufferObject.TextureId);
+    m_VorticityProgramShader.SetUniform("curl", Settings.Curl);
+    m_VorticityProgramShader.SetUniform("dt", deltaTime);
+
+    Blit(m_VelocityFrameBufferObject.GetSecondaryFrameBuffer());
+    m_VelocityFrameBufferObject.Swap();
+
+    m_DivergenceProgramShader.Bind();
+    m_DivergenceProgramShader.SetUniform("texelSize", Vector2f(1.0f / m_TextureWidth, 1.0f / m_TextureHeight));
+    m_DivergenceProgramShader.SetUniform("velocity", m_VelocityFrameBufferObject.GetPrimaryFrameBuffer().TextureId);
+
+    Blit(m_DivergenceFrameBufferObject);
+
+    m_ClearProgramShader.Bind();
+    glActiveTexture(GL_TEXTURE0 + m_PressureFrameBufferObject.GetPrimaryFrameBuffer().TextureId);
+    glBindTexture(GL_TEXTURE_2D, m_PressureFrameBufferObject.GetPrimaryFrameBuffer().Texture);
+    m_ClearProgramShader.SetUniform("texture", m_PressureFrameBufferObject.GetPrimaryFrameBuffer().TextureId);
+    m_ClearProgramShader.SetUniform("value", Settings.PressureDissipation);
+
+    Blit(m_PressureFrameBufferObject.GetSecondaryFrameBuffer());
+    m_PressureFrameBufferObject.Swap();
+
+    m_PressureProgramShader.Bind();
+    m_PressureProgramShader.SetUniform("texelSize", Vector2f(1.0f / m_TextureWidth, 1.0f / m_TextureHeight));
+    m_PressureProgramShader.SetUniform("divergence", m_DivergenceFrameBufferObject.TextureId);
+    m_PressureProgramShader.SetUniform("pressure", m_PressureFrameBufferObject.GetPrimaryFrameBuffer().TextureId);
+    glActiveTexture(GL_TEXTURE0 + m_PressureFrameBufferObject.GetPrimaryFrameBuffer().TextureId);
+    for (int i = 0; i < Settings.PressureIterations; ++i)
+    {
+        glBindTexture(GL_TEXTURE_2D, m_PressureFrameBufferObject.GetPrimaryFrameBuffer().Texture);
+        Blit(m_PressureFrameBufferObject.GetSecondaryFrameBuffer());
+        m_PressureFrameBufferObject.Swap();
+    }
+
+    m_GradientProgramShader.Bind();
+    m_GradientProgramShader.SetUniform("texelSize", Vector2f(1.0f / m_TextureWidth, 1.0f / m_TextureHeight));
+    m_GradientProgramShader.SetUniform("pressure", m_PressureFrameBufferObject.GetPrimaryFrameBuffer().TextureId);
+    m_GradientProgramShader.SetUniform("velocity", m_VelocityFrameBufferObject.GetPrimaryFrameBuffer().TextureId);
+    Blit(m_VelocityFrameBufferObject.GetSecondaryFrameBuffer());
+    m_VelocityFrameBufferObject.Swap();
+
+    m_DisplayProgramShader.Bind();
+    m_DisplayProgramShader.SetUniform("texture", m_DensityFrameBufferObject.GetPrimaryFrameBuffer().TextureId);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void FluidRenderer::UpdateSplat(const Vector2f& position, const Vector2f& delta, const Vector4f& colour)
+void FluidRenderer::UpdateSplat(const Vector2f& position, const Vector2f& direction, const Vector4f& colour)
 {
     Window& window = Window::Get();
     const int windowWidth = window.GetWidth();
@@ -37,9 +121,9 @@ void FluidRenderer::UpdateSplat(const Vector2f& position, const Vector2f& delta,
     m_SplatProgramShader.SetUniform("target", m_VelocityFrameBufferObject.GetPrimaryFrameBuffer().TextureId);
     m_SplatProgramShader.SetUniform("aspectRatio", aspectRatio);
 
-    const Vector2f point(position.X / windowWidth, 1.0 - position.Y / windowHeight);
+    const Vector2f point(position.X / windowWidth, 1.0f - position.Y / windowHeight);
     m_SplatProgramShader.SetUniform("point", point);
-    m_SplatProgramShader.SetUniform("colour", { delta.X, -delta.Y, 1.0 });
+    m_SplatProgramShader.SetUniform("colour", { direction.X, -direction.Y, 1.0 });
     m_SplatProgramShader.SetUniform("radius", Settings.SplatRadius);
     
     Blit(m_VelocityFrameBufferObject.GetSecondaryFrameBuffer());
@@ -62,9 +146,9 @@ void FluidRenderer::BatchSplats(const int amount)
     {
         const Vector4f colour = Random::RGB(0) * 10;
         const Vector2f position = { windowWidth * Random::Value(), windowHeight * Random::Value() };
-        const Vector2f delta = { 1000 * (Random::Value() - 0.5f), 1000 * (Random::Value() - 0.5f) };
+        const Vector2f direction = { 1000 * (Random::Value() - 0.5f), 1000 * (Random::Value() - 0.5f) };
 
-        UpdateSplat(position, delta, colour);
+        UpdateSplat(position, direction, colour);
     }
 }
 

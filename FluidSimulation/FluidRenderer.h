@@ -48,6 +48,8 @@ private:
     FrameBufferObject m_CurlFrameBufferObject;
     DoubleFrameBufferObject m_PressureFrameBufferObject;
 
+    Vector2f m_PreviousMousePosition;
+
     void Update(float deltaTime);
 
     void UpdateSplat(const Vector2f& position, const Vector2f& delta, const Vector4f& colour);

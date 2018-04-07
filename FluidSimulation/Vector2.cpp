@@ -1,5 +1,5 @@
 #include "Vector2.h"
-#include "Vector3.h"
+#include "Maths.h"
 
 const Vector2f Vector2f::Zero = Vector2f(0, 0);
 const Vector2f Vector2f::One = Vector2f(1, 1);
@@ -180,6 +180,16 @@ bool Vector2f::operator>(const Vector2f& right) const
 bool Vector2f::operator>=(const Vector2f& right) const
 {
 	return (X >= right.X && Y >= right.Y);
+}
+
+Vector2f::operator Vector3f() const
+{
+    return { X, Y, 0 };
+}
+
+Vector2f::operator Vector4f() const
+{
+    return { X, Y, 0, 1 };
 }
 
 // String Operations

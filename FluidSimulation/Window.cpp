@@ -1,10 +1,10 @@
 #include "Window.h"
 
 #include <iostream>
-#include <utility>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "Input.h"
 
 void WindowResizeCallback(GLFWwindow* window, int width, int height);
 
@@ -64,6 +64,8 @@ void Window::Initialize(const std::string& title, const int width, const int hei
     {
         glfwTerminate();
     }
+
+    Input::Initialize();
 }
 
 void Window::Update() const

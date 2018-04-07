@@ -173,7 +173,10 @@ xcopy "$(SolutionDir)Assets" "$(OutDir)\Assets\" /S /Y</Command>
     <ClCompile Include="imgui\ImGuiSystem.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Random.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -192,8 +195,11 @@ xcopy "$(SolutionDir)Assets" "$(OutDir)\Assets\" /S /Y</Command>
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\ImGuiSystem.h" />
     <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="InputManager.h" />
     <ClInclude Include="MathFunctions.h" />
     <ClInclude Include="Maths.h" />
+    <ClInclude Include="Random.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb\stb_rect_pack.h" />
     <ClInclude Include="stb\stb_textedit.h" />

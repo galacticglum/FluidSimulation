@@ -3,9 +3,8 @@
 #include <string>
 #include <algorithm>
 
-#include "Maths.h"
-
 struct Vector3f;
+struct Vector4f;
 struct Vector2f
 {
 	float X, Y;
@@ -51,20 +50,20 @@ struct Vector2f
 
     friend Vector2f operator-(Vector2f left) { return left.Negative(); }
 
-    friend Vector2f operator+(Vector2f left, float right) { return left.Add(right); }
-    friend Vector2f operator-(Vector2f left, float right) { return left.Subtract(right); }
-    friend Vector2f operator*(Vector2f left, float right) { return left.Multiply(right); }
-    friend Vector2f operator/(Vector2f left, float right) { return left.Divide(right); }
+    friend Vector2f operator+(Vector2f left, const float right) { return left.Add(right); }
+    friend Vector2f operator-(Vector2f left, const float right) { return left.Subtract(right); }
+    friend Vector2f operator*(Vector2f left, const float right) { return left.Multiply(right); }
+    friend Vector2f operator/(Vector2f left, const float right) { return left.Divide(right); }
 
     Vector2f& operator+=(const Vector2f& right) { return Add(right); }
     Vector2f& operator-=(const Vector2f& right) { return Subtract(right); }
     Vector2f& operator*=(const Vector2f& right) { return Multiply(right); }
     Vector2f& operator/=(const Vector2f& right) { return Divide(right); }
 
-    Vector2f& operator+=(float right) { return Add(right); }
-    Vector2f& operator-=(float right) { return Subtract(right); }
-    Vector2f& operator*=(float right) { return Multiply(right); }
-    Vector2f& operator/=(float right) { return Divide(right); }
+    Vector2f& operator+=(const float right) { return Add(right); }
+    Vector2f& operator-=(const float right) { return Subtract(right); }
+    Vector2f& operator*=(const float right) { return Multiply(right); }
+    Vector2f& operator/=(const float right) { return Divide(right); }
 
 	bool operator==(const Vector2f& right) const;
 	bool operator!=(const Vector2f& right) const;
@@ -74,8 +73,8 @@ struct Vector2f
 	bool operator>(const Vector2f& right) const;
 	bool operator>=(const Vector2f& right) const;
 
-    explicit operator Vector3f() const { return { X, Y, 0 }; }
-    explicit operator Vector4f() const { return { X, Y, 0, 1 }; }
+    explicit operator Vector3f() const;
+    explicit operator Vector4f() const;
 
 	std::string ToString() const;
 	friend std::ostream& operator<<(std::ostream& stream, const Vector2f& right);
