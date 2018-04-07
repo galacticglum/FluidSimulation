@@ -26,6 +26,9 @@
 *.a
 *.lib
 
+!"Third Party/*.lib"
+!"Third Party/*.dll"
+
 # Executables
 *.exe
 *.out
@@ -355,6 +358,3 @@ ASALocalRun/
 
 # NVidia Nsight GPU debugger configuration file
 *.nvuser
-
-!"Third Party/*.lib"
-!"Third Party/*.dll"
