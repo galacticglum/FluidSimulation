@@ -1,35 +1,45 @@
 #pragma once
 
-#include <iostream>
 #include <string>
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
+struct GLFWwindow;
 class Window
 {
 public:
-	Window(std::string title, int width, int height);
-	~Window();
+    Window(const Window&& other) = delete;
+    Window& operator=(Window&& other) = delete;
 
-	void Clear();
-	void Update();
+    Window(const Window& other) = delete;
+    Window& operator=(const Window& other) = delete;
 
-	inline void MakeContextCurrent() { glfwMakeContextCurrent(m_Window); }
+    /**
+     * \brief Get the static window instance.
+     * \return The window instance.
+     */
+    static Window& Get();
+    static void Clear();
 
-	inline bool IsCloseRequested() { return glfwWindowShouldClose(m_Window) == 1; }
-	inline int GetWidth() { return m_Width; }
-	inline int GetHeight() { return m_Height; }
-	inline GLFWwindow* GetGLFWwindow() { return m_Window; }
+    void Initialize(const std::string& title = "", int width = 0, int height = 0);
+    void Update() const;
 
-	void SetTitle(std::string title);
-	inline void SetClearColour(float red, float green, float blue, float alpha) { glClearColor(red, green, blue, alpha); }
+    void MakeContextCurrent() const;
+
+    bool IsCloseRequested() const;
+    int GetWidth() const;
+    int GetHeight() const;
+    GLFWwindow* GetGLFWwindow() const;
+
+	void SetTitle(const std::string& title);
+    static void SetClearColour(float red, float green, float blue, float alpha);
 private:
-	GLFWwindow * m_Window;
+    Window() = default;
+    ~Window();
 
+	GLFWwindow* m_Window{};
 	std::string m_Title;
-	int m_Width;
-	int m_Height;
 
-	bool Initialize();
+	int m_Width{};
+	int m_Height{};
+
+	bool InitializeGlfwBackend();
 };

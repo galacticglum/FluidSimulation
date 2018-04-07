@@ -1,7 +1,7 @@
 #include "Shader.h"
 #include "File.h"
 
-Shader::Shader(std::string vertexFilePath, std::string fragmentFilePath)
+Shader::Shader(const std::string& vertexFilePath, const std::string& fragmentFilePath)
 {
 	m_ProgramHandle = glCreateProgram();
 	if (m_ProgramHandle == 0)
@@ -13,6 +13,20 @@ Shader::Shader(std::string vertexFilePath, std::string fragmentFilePath)
 	AddShader(vertexFilePath, GL_VERTEX_SHADER);
 	AddShader(fragmentFilePath, GL_FRAGMENT_SHADER);
 	LinkShaders();
+
+    GLint uniformCount;
+    glGetProgramiv(m_ProgramHandle, GL_ACTIVE_UNIFORMS, &uniformCount);
+
+    const GLsizei uniformMaxNameLength = 16;
+    GLchar name[uniformMaxNameLength];
+    GLsizei uniformNameLength;
+
+    for (int i = 0; i < uniformCount; ++i)
+    {
+        glGetActiveUniformName(m_ProgramHandle, static_cast<GLuint>(i), uniformMaxNameLength, &uniformNameLength, name);
+        AddUniform(name);
+    }
+
 	DeleteShaders();
 }
 
@@ -21,10 +35,16 @@ Shader::~Shader()
 	glDeleteProgram(m_ProgramHandle);
 }
 
-void Shader::AddShader(std::string filePath, GLenum shaderType)
+void Shader::SetAttributeLocation(const std::string& attributeName, const GLuint attributeLocation) const
+{
+    glBindAttribLocation(m_ProgramHandle, attributeLocation, attributeName.c_str());
+}
+
+void Shader::AddShader(const std::string& filePath, const GLenum shaderType)
 {
 	std::string shaderFile = File::Read(filePath);
-	int shader = glCreateShader(shaderType);
+    const int shader = glCreateShader(shaderType);
+
 	if (shader == GL_FALSE)
 	{
 		std::cout << "Shader::AddShader: Error creating shader! Could not generate shader buffer.\n";
@@ -32,7 +52,7 @@ void Shader::AddShader(std::string filePath, GLenum shaderType)
 	}
 
 	const char* file = shaderFile.c_str();
-	glShaderSource(shader, 1, &file, NULL);
+	glShaderSource(shader, 1, &file, nullptr);
 	glCompileShader(shader);
 
 	GLint compileStatus;
@@ -40,7 +60,7 @@ void Shader::AddShader(std::string filePath, GLenum shaderType)
 	if (compileStatus == GL_FALSE)
 	{
 		GLchar shaderInfoLog[1024];
-		glGetShaderInfoLog(shader, 1024, NULL, shaderInfoLog);
+		glGetShaderInfoLog(shader, 1024, nullptr, shaderInfoLog);
 
 		std::cout << "Shader::AddShader: Error compiling shader!\n";
 		std::cout << shaderInfoLog << "\n";
@@ -51,7 +71,7 @@ void Shader::AddShader(std::string filePath, GLenum shaderType)
 	m_Shaders.push_back(shader);
 }
 
-void Shader::LinkShaders()
+void Shader::LinkShaders() const
 {
 	glLinkProgram(m_ProgramHandle);
 
@@ -60,7 +80,7 @@ void Shader::LinkShaders()
 	if (linkStatus = GL_FALSE)
 	{
 		GLchar programInfoLog[1024];
-		glGetProgramInfoLog(m_ProgramHandle, 1024, NULL, programInfoLog);
+		glGetProgramInfoLog(m_ProgramHandle, 1024, nullptr, programInfoLog);
 
 		std::cout << "Shader::LinkShaders: Error linking shader program!\n";
 		std::cout << programInfoLog << "\n";
@@ -74,7 +94,7 @@ void Shader::LinkShaders()
 	if (validationStatus == GL_FALSE)
 	{
 		GLchar validationInfoLog[1024];
-		glGetProgramInfoLog(m_ProgramHandle, 1024, NULL, validationInfoLog);
+		glGetProgramInfoLog(m_ProgramHandle, 1024, nullptr, validationInfoLog);
 
 		std::cout << "Shader::LinkShaders: Error validating shader program!\n";
 		std::cout << validationInfoLog << "\n";
@@ -93,7 +113,7 @@ void Shader::DeleteShaders()
 
 void Shader::AddUniform(const std::string& uniformName)
 {
-	GLuint uniform = glGetUniformLocation(m_ProgramHandle, uniformName.c_str());
+	GLint uniform = glGetUniformLocation(m_ProgramHandle, uniformName.c_str());
 	if (uniform == -1)
 	{
 		std::cout << "Shader::AddUniform: Could not find uniform: " << uniformName << "!\n";

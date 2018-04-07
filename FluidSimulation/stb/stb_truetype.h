@@ -404,13 +404,11 @@ int main(int arg, char **argv)
    #endif
 
    #ifndef STBTT_sqrt
-   #include <math.h>
-   #define STBTT_sqrt(x)      sqrt(x)
+#define STBTT_sqrt(x)      sqrt(x)
    #endif
 
    #ifndef STBTT_fabs
-   #include <math.h>
-   #define STBTT_fabs(x)      fabs(x)
+#define STBTT_fabs(x)      fabs(x)
    #endif
 
    // #define your own functions "STBTT_malloc" / "STBTT_free" to avoid malloc.h

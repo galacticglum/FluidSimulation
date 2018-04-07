@@ -1,8 +1,6 @@
 #pragma once
 
-#include <iostream>
 #include <string>
-#include <cmath>
 #include <algorithm>
 
 struct Vector2f;
@@ -11,13 +9,13 @@ struct Vector3f
 {
 	float X, Y, Z;
 
-	inline Vector3f() : Vector3f(0.0f, 0.0f, 0.0f) { }
-	inline explicit Vector3f(float scalar) : Vector3f(scalar, scalar, scalar) { }
-	inline Vector3f(float x, float y, float z) : X(x), Y(y), Z(z) { }
-	inline Vector3f(float x, float y) : X(x), Y(y), Z(0) {}
+    Vector3f() : Vector3f(0.0f, 0.0f, 0.0f) { }
+    explicit Vector3f(const float scalar) : Vector3f(scalar, scalar, scalar) { }
+    Vector3f(const float x, const float y, const float z) : X(x), Y(y), Z(z) { }
+    Vector3f(const float x, const float y) : X(x), Y(y), Z(0) {}
 
-	Vector3f(const Vector2f& vector);
-	Vector3f(const Vector4f& vector);
+    explicit Vector3f(const Vector2f& vector);
+    explicit Vector3f(const Vector4f& vector);
 
 	Vector3f& Add(const Vector3f& right);
 	Vector3f& Subtract(const Vector3f& right);
@@ -48,27 +46,27 @@ struct Vector3f
 
 	static Vector3f Lerp(const Vector3f& start, const Vector3f& destination, float blend);
 
-	inline friend Vector3f operator+(Vector3f left, const Vector3f& right) { return left.Add(right); }
-	inline friend Vector3f operator-(Vector3f left, const Vector3f& right) { return left.Subtract(right); }
-	inline friend Vector3f operator*(Vector3f left, const Vector3f& right) { return left.Multiply(right); }
-	inline friend Vector3f operator/(Vector3f left, const Vector3f& right) { return left.Divide(right); }
+    friend Vector3f operator+(Vector3f left, const Vector3f& right) { return left.Add(right); }
+    friend Vector3f operator-(Vector3f left, const Vector3f& right) { return left.Subtract(right); }
+    friend Vector3f operator*(Vector3f left, const Vector3f& right) { return left.Multiply(right); }
+    friend Vector3f operator/(Vector3f left, const Vector3f& right) { return left.Divide(right); }
 
-	inline friend Vector3f operator-(Vector3f left) { return left.Negative(); }
+    friend Vector3f operator-(Vector3f left) { return left.Negative(); }
 
-	inline friend Vector3f operator+(Vector3f left, float right) { return left.Add(right); }
-	inline friend Vector3f operator-(Vector3f left, float right) { return left.Subtract(right); }
-	inline friend Vector3f operator*(Vector3f left, float right) { return left.Multiply(right); }
-	inline friend Vector3f operator/(Vector3f left, float right) { return left.Divide(right); }
+    friend Vector3f operator+(Vector3f left, float right) { return left.Add(right); }
+    friend Vector3f operator-(Vector3f left, float right) { return left.Subtract(right); }
+    friend Vector3f operator*(Vector3f left, float right) { return left.Multiply(right); }
+    friend Vector3f operator/(Vector3f left, float right) { return left.Divide(right); }
 
-    inline Vector3f& operator+=(const Vector3f& right) { return Add(right); }
-    inline Vector3f& operator-=(const Vector3f& right) { return Subtract(right); }
-    inline Vector3f& operator*=(const Vector3f& right) { return Multiply(right); }
-    inline Vector3f& operator/=(const Vector3f& right) { return Divide(right); }
+    Vector3f& operator+=(const Vector3f& right) { return Add(right); }
+    Vector3f& operator-=(const Vector3f& right) { return Subtract(right); }
+    Vector3f& operator*=(const Vector3f& right) { return Multiply(right); }
+    Vector3f& operator/=(const Vector3f& right) { return Divide(right); }
 
-    inline Vector3f& operator+=(float right) { return Add(right); }
-    inline Vector3f& operator-=(float right) { return Subtract(right); }
-    inline Vector3f& operator*=(float right) { return Multiply(right); }
-    inline Vector3f& operator/=(float right) { return Divide(right); }
+    Vector3f& operator+=(const float right) { return Add(right); }
+    Vector3f& operator-=(const float right) { return Subtract(right); }
+    Vector3f& operator*=(const float right) { return Multiply(right); }
+    Vector3f& operator/=(const float right) { return Divide(right); }
 
 	bool operator==(const Vector3f& right) const;
 	bool operator!=(const Vector3f& right) const;
@@ -77,6 +75,9 @@ struct Vector3f
 	bool operator<=(const Vector3f& right) const;
 	bool operator>(const Vector3f& right) const;
 	bool operator>=(const Vector3f& right) const;
+
+    explicit operator Vector2f() const;
+    explicit operator Vector4f() const;
 
 	std::string ToString() const;
 	friend std::ostream& operator<<(std::ostream& stream, const Vector3f& right);

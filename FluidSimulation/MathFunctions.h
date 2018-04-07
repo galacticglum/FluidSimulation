@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <cmath>
-#include <limits>
 
 static const double PI = 3.1415926535897932384626433;
 static const double PI_OVER_2 = PI / 2;
@@ -36,7 +35,7 @@ struct MathFunctions
     static long BinomialCoefficient(int n, int k);
 
     static float InverseSqrtFast(float x);
-    inline static double InverseSqrtFast(double x) { return InverseSqrtFast(static_cast<float>(x)); }
+    static double InverseSqrtFast(double x) { return InverseSqrtFast(static_cast<float>(x)); }
 
     static float DegreesToRadians(float degrees);
     static float RadiansToDegrees(float radians);
@@ -47,15 +46,15 @@ struct MathFunctions
     static void Swap(double& a, double& b);
     static void Swap(float& a, float& b);
 
-    inline static long Lerp(long left, long right, float blend) { return static_cast<long>(left + (right - left) * blend); }
-    inline static int Lerp(int left, int right, float blend) { return static_cast<int>(left + (right - left) * blend); }
-    inline static float Lerp(float left, float right, float blend) { return left + (right - left) * blend; }
-    inline static double Lerp(double left, double right, double blend) { return left + (right - left) * blend; }
+    static long Lerp(const long left, const long right, const float blend) { return static_cast<long>(left + (right - left) * blend); }
+    static int Lerp(const int left, const int right, const float blend) { return static_cast<int>(left + (right - left) * blend); }
+    static float Lerp(const float left, const float right, const float blend) { return left + (right - left) * blend; }
+    static double Lerp(const double left, const double right, const double blend) { return left + (right - left) * blend; }
 
-    inline static bool IsEqualApproximate(long left, long right) { return std::abs(left - right) < MathFunctions::Epsilon; }
-    inline static bool IsEqualApproximate(int left, int right) { return std::abs(left - right) < MathFunctions::Epsilon; }
-    inline static bool IsEqualApproximate(float left, float right) { return std::abs(left - right) < MathFunctions::Epsilon; }
-    inline static bool IsEqualApproximate(double left, double right) { return std::abs(left - right) < MathFunctions::Epsilon; }
+    static bool IsEqualApproximate(const long left, const long right) { return std::abs(left - right) < Epsilon; }
+    static bool IsEqualApproximate(const int left, const int right) { return std::abs(left - right) < Epsilon; }
+    static bool IsEqualApproximate(const float left, const float right) { return std::abs(left - right) < Epsilon; }
+    static bool IsEqualApproximate(const double left, const double right) { return std::abs(left - right) < Epsilon; }
 
     static bool IsEqualApproximate(const Vector2f& left, const Vector2f& right);
     static bool IsEqualApproximate(const Vector3f& left, const Vector3f& right);

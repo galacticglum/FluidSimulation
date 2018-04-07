@@ -220,6 +220,16 @@ bool Vector3f::operator>=(const Vector3f& right) const
 	return (X >= right.X && Y >= right.Y && Z >= right.Z);
 }
 
+Vector3f::operator Vector2f() const
+{
+    return { X, Y };
+}
+
+Vector3f::operator Vector4f() const
+{
+    return { X, Y, Z, 1 };
+}
+
 // String Operations
 std::string Vector3f::ToString() const
 {

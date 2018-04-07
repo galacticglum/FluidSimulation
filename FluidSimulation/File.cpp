@@ -1,5 +1,8 @@
 #include "File.h"
 
+#include <fstream>
+#include <iostream>
+
 std::string File::Read(const std::string& filePath)
 {
 	std::ifstream file;
@@ -18,11 +21,9 @@ std::string File::Read(const std::string& filePath)
 
 		return fileContents;
 	}
-	else
-	{
-		std::cout << "File::Read: Could not open file: " + filePath + "!\n";
-		return fileContents;
-	}
+
+    std::cout << "File::Read: Could not open file: " + filePath + "!\n";
+    return fileContents;
 }
 
 bool File::Write(const std::string& filePath, const std::string& content)
@@ -35,11 +36,9 @@ bool File::Write(const std::string& filePath, const std::string& content)
 		file << content;
 		return true;
 	}
-	else
-	{
-		std::cout << "File::Write: Could not open file: " + filePath + "!\n";
-		return false;
-	}
+
+    std::cout << "File::Write: Could not open file: " + filePath + "!\n";
+    return false;
 }
 
 bool File::Exists(const std::string& filePath)
@@ -52,7 +51,7 @@ bool File::Exists(const std::string& filePath)
 
 std::string File::GetExtension(const std::string& filePath)
 {
-	if (filePath.find_last_of(".") != std::string::npos)
+	if (filePath.find_last_of('.') != std::string::npos)
 	{
 		return filePath.substr(filePath.find_last_of(".") + 1);
 	}

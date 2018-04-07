@@ -1,33 +1,42 @@
 #include "GameApplication.h"
-#include "Window.h"
 #include "Time.h"
+#include "Window.h"
 #include "imgui/ImGuiSystem.h"
+
+/**
+ * \brief Initializes the game application.
+ * \param width The width of the game window.
+ * \param height The height of the game window.
+ * \param windowTitle The title of the game window.
+ * \param frameRate The target framerate to run at.
+ */
+GameApplication::GameApplication(const int width, const int height, const std::string& windowTitle, const double frameRate) :
+    m_WindowTitle(windowTitle), m_Running(false), m_FrameTime(1.0 / frameRate), m_UpdatesPerSecond(0),
+    m_FramesPerSecond(0),
+    m_Width(width), m_Height(height)
+{
+}
 
 void GameApplication::Start()
 {
-	if (m_Running == true)
-	{
-		return;
-	}
+    if (m_Running) return;
 
-	m_Window = new Window(m_WindowTitle, m_Width, m_Height);
+	Window& window = Window::Get();
+    window.Initialize(m_WindowTitle, m_Width, m_Height);
+
 	Run();
 }
 
 void GameApplication::Stop()
 {
-	if (m_Running == false)
-	{
-		return;
-	}
-
+    if (!m_Running) return;
 	m_Running = false;
 }
 
 void GameApplication::Run()
 {
 	// Initialize ImGui
-	ImGuiSystem::Init(m_Window->GetGLFWwindow(), true);
+    ImGuiSystem::Init(Window::Get().GetGLFWwindow(), true);
 	ImGui::StyleColorsClassic();
 
 	m_Running = true;
@@ -43,8 +52,8 @@ void GameApplication::Run()
 	while (m_Running)
 	{
 		bool doRender = false;
-		double currentFrameTime = Time::GetTime();
-		double passedFrameTime = currentFrameTime - lastFrameTime;
+	    const double currentFrameTime = Time::GetTime();
+	    const double passedFrameTime = currentFrameTime - lastFrameTime;
 		lastFrameTime = currentFrameTime;
 
 		updateTimer += passedFrameTime;
@@ -62,7 +71,7 @@ void GameApplication::Run()
 
 		while (updateTimer > m_FrameTime)
 		{
-			if (m_Window->IsCloseRequested())
+			if (Window::Get().IsCloseRequested())
 			{
 				Stop();
 			}
@@ -97,15 +106,16 @@ void GameApplication::Update(float deltaTime)
 {
 }
 
-void GameApplication::Render()
+void GameApplication::Render() const
 {
-	m_Window->MakeContextCurrent();
-	m_Window->Update();
+    Window& window = Window::Get();
+    window.MakeContextCurrent();
+	window.Update();
 
 	ImGuiSystem::NewFrame();
 	OnGui();
 
-	m_Window->Clear();
+    Window::Clear();
 	ImGui::Render();
 }
 
@@ -113,15 +123,15 @@ bool show_demo_window = true;
 bool show_another_window = false;
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-void GameApplication::OnGui()
+void GameApplication::OnGui() const
 {
 	{
 		static float f = 0.0f;
 		ImGui::Text("Hello, world!");                           // Some text (you can use a format string too)
 		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float as a slider from 0.0f to 1.0f
-        if (ImGui::ColorEdit3("clear color", (float*)&clear_color))
+        if (ImGui::ColorEdit3("clear color", reinterpret_cast<float*>(&clear_color)))
         {
-            m_Window->SetClearColour(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+            Window::SetClearColour(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
         }
 		if (ImGui::Button("Demo Window"))                       // Use buttons to toggle our bools. We could use Checkbox() as well.
 			show_demo_window ^= 1;
@@ -130,7 +140,6 @@ void GameApplication::OnGui()
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	}
 
-	// 2. Show another simple window. In most cases you will use an explicit Begin/End pair to name the window.
 	if (show_another_window)
 	{
 		ImGui::Begin("Another Window", &show_another_window);
@@ -138,10 +147,9 @@ void GameApplication::OnGui()
 		ImGui::End();
 	}
 
-	// 3. Show the ImGui demo window. Most of the sample code is in ImGui::ShowDemoWindow().
 	if (show_demo_window)
 	{
-		ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver); // Normally user code doesn't need/want to call this because positions are saved in .ini file anyway. Here we just want to make the demo initial state a bit more friendly!
+		ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
 		ImGui::ShowDemoWindow(&show_demo_window);
 	}
 }
@@ -149,5 +157,4 @@ void GameApplication::OnGui()
 void GameApplication::Shutdown()
 {
 	ImGuiSystem::Shutdown();
-	delete m_Window;
 }
