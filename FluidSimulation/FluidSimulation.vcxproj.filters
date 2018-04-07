@@ -57,6 +57,9 @@
     <ClCompile Include="Vector4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MathFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -109,9 +112,6 @@
     </ClInclude>
     <ClInclude Include="MathFunctions.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MathFunctions.cpp">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Maths.h">
       <Filter>Header Files</Filter>

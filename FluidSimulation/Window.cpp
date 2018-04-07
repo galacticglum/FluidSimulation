@@ -5,7 +5,7 @@ void WindowResizeCallback(GLFWwindow* window, int width, int height);
 Window::Window(std::string title, int width, int height) :
 	m_Title(title), m_Width(width), m_Height(height)
 {
-	if (!this->Initialize())
+	if (!Initialize())
 	{
 		glfwTerminate();
 	}
@@ -26,16 +26,15 @@ bool Window::Initialize()
 		return false;
 	}
 
-	this->m_Window = glfwCreateWindow(this->m_Width, this->m_Height, this->m_Title.c_str(), nullptr, nullptr);
-	if (!this->m_Window)
+	m_Window = glfwCreateWindow(m_Width, m_Height, m_Title.c_str(), nullptr, nullptr);
+	if (!m_Window)
 	{
 		std::cout << "Window::Initialize: Failed to create window!\n";
 		return false;
 	}
 
-	glfwSetWindowSizeCallback(this->m_Window, WindowResizeCallback);
-
-	this->MakeContextCurrent();
+	glfwSetWindowSizeCallback(m_Window, WindowResizeCallback);
+	MakeContextCurrent();
 
 	if (glewInit() != GLEW_OK)
 	{
@@ -55,13 +54,13 @@ void Window::Clear()
 void Window::Update()
 {
 	glfwPollEvents();
-	glfwSwapBuffers(this->m_Window);
+	glfwSwapBuffers(m_Window);
 }
 
 void Window::SetTitle(std::string title)
 {
-	this->m_Title = title;
-	glfwSetWindowTitle(this->m_Window, this->m_Title.c_str());
+	m_Title = title;
+	glfwSetWindowTitle(m_Window, m_Title.c_str());
 }
 
 void WindowResizeCallback(GLFWwindow* window, int width, int height)

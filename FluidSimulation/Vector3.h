@@ -60,15 +60,15 @@ struct Vector3f
 	inline friend Vector3f operator*(Vector3f left, float right) { return left.Multiply(right); }
 	inline friend Vector3f operator/(Vector3f left, float right) { return left.Divide(right); }
 
-	inline Vector3f& operator+=(const Vector3f& right) { return this->Add(right); }
-	inline Vector3f& operator-=(const Vector3f& right) { return this->Subtract(right); }
-	inline Vector3f& operator*=(const Vector3f& right) { return this->Multiply(right); }
-	inline Vector3f& operator/=(const Vector3f& right) { return this->Divide(right); }
+    inline Vector3f& operator+=(const Vector3f& right) { return Add(right); }
+    inline Vector3f& operator-=(const Vector3f& right) { return Subtract(right); }
+    inline Vector3f& operator*=(const Vector3f& right) { return Multiply(right); }
+    inline Vector3f& operator/=(const Vector3f& right) { return Divide(right); }
 
-	inline Vector3f& operator+=(float right) { return this->Add(right); }
-	inline Vector3f& operator-=(float right) { return this->Subtract(right); }
-	inline Vector3f& operator*=(float right) { return this->Multiply(right); }
-	inline Vector3f& operator/=(float right) { return this->Divide(right); }
+    inline Vector3f& operator+=(float right) { return Add(right); }
+    inline Vector3f& operator-=(float right) { return Subtract(right); }
+    inline Vector3f& operator*=(float right) { return Multiply(right); }
+    inline Vector3f& operator/=(float right) { return Divide(right); }
 
 	bool operator==(const Vector3f& right) const;
 	bool operator!=(const Vector3f& right) const;

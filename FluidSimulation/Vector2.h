@@ -58,15 +58,15 @@ struct Vector2f
 	inline friend Vector2f operator*(Vector2f left, float right) { return left.Multiply(right); }
 	inline friend Vector2f operator/(Vector2f left, float right) { return left.Divide(right); }
 
-	inline Vector2f& operator+=(const Vector2f& right) { return this->Add(right); }
-	inline Vector2f& operator-=(const Vector2f& right) { return this->Subtract(right); }
-	inline Vector2f& operator*=(const Vector2f& right) { return this->Multiply(right); }
-	inline Vector2f& operator/=(const Vector2f& right) { return this->Divide(right); }
+    inline Vector2f& operator+=(const Vector2f& right) { return Add(right); }
+    inline Vector2f& operator-=(const Vector2f& right) { return Subtract(right); }
+    inline Vector2f& operator*=(const Vector2f& right) { return Multiply(right); }
+    inline Vector2f& operator/=(const Vector2f& right) { return Divide(right); }
 
-	inline Vector2f& operator+=(float right) { return this->Add(right); }
-	inline Vector2f& operator-=(float right) { return this->Subtract(right); }
-	inline Vector2f& operator*=(float right) { return this->Multiply(right); }
-	inline Vector2f& operator/=(float right) { return this->Divide(right); }
+	inline Vector2f& operator+=(float right) { return Add(right); }
+	inline Vector2f& operator-=(float right) { return Subtract(right); }
+	inline Vector2f& operator*=(float right) { return Multiply(right); }
+	inline Vector2f& operator/=(float right) { return Divide(right); }
 
 	bool operator==(const Vector2f& right) const;
 	bool operator!=(const Vector2f& right) const;

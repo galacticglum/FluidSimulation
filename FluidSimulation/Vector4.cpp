@@ -8,80 +8,80 @@ Vector4f::Vector4f(const Vector3f& vector, float w) : X(vector.X), Y(vector.Y), 
 
 Vector4f& Vector4f::Add(const Vector4f& right)
 {
-	this->X += right.X;
-	this->Y += right.Y;
-	this->Z += right.Z;
-	this->W += right.W;
+    X += right.X;
+    Y += right.Y;
+    Z += right.Z;
+    W += right.W;
 
 	return *this;
 }
 
 Vector4f& Vector4f::Subtract(const Vector4f& right)
 {
-	this->X -= right.X;
-	this->Y -= right.Y;
-	this->Z -= right.Z;
-	this->W -= right.W;
+    X -= right.X;
+    Y -= right.Y;
+    Z -= right.Z;
+    W -= right.W;
 
 	return *this;
 }
 
 Vector4f& Vector4f::Multiply(const Vector4f& right)
 {
-	this->X *= right.X;
-	this->Y *= right.Y;
-	this->Z *= right.Z;
-	this->W *= right.W;
+    X *= right.X;
+    Y *= right.Y;
+    Z *= right.Z;
+    W *= right.W;
 
 	return *this;
 }
 
 Vector4f& Vector4f::Divide(const Vector4f& right)
 {
-	this->X /= right.X;
-	this->Y /= right.Y;
-	this->Z /= right.Z;
-	this->W /= right.W;
+	X /= right.X;
+	Y /= right.Y;
+	Z /= right.Z;
+	W /= right.W;
 
 	return *this;
 }
 
 Vector4f& Vector4f::Add(float right)
 {
-	this->X += right;
-	this->Y += right;
-	this->Z += right;
-	this->W += right;
+    X += right;
+    Y += right;
+    Z += right;
+    W += right;
 
 	return *this;
 }
 
 Vector4f& Vector4f::Subtract(float right)
 {
-	this->X -= right;
-	this->Y -= right;
-	this->Z -= right;
-	this->W -= right;
+    X -= right;
+    Y -= right;
+    Z -= right;
+    W -= right;
 
 	return *this;
 }
 
 Vector4f& Vector4f::Multiply(float right)
 {
-	this->X *= right;
-	this->Y *= right;
-	this->Z *= right;
-	this->W *= right;
+    X *= right;
+    Y *= right;
+    Z *= right;
+    W *= right;
 
 	return *this;
 }
 
 Vector4f& Vector4f::Divide(float right)
 {
-	this->X /= right;
-	this->Y /= right;
-	this->Z /= right;
-	this->W /= right;
+    X /= right;
+    Y /= right;
+    Z /= right;
+    W /= right;
 
 	return *this;
 }
@@ -89,10 +89,10 @@ Vector4f& Vector4f::Divide(float right)
 Vector4f& Vector4f::Normalize()
 {
 	float length = Magnitude();
-	this->X /= length;
-	this->Y /= length;
-	this->Z /= length;
-	this->W /= length;
+	X /= length;
+	Y /= length;
+	Z /= length;
+	W /= length;
 
 	return *this;
 }
@@ -100,39 +100,39 @@ Vector4f& Vector4f::Normalize()
 Vector4f Vector4f::Normalized() const
 {
 	float length = Magnitude();
-	return Vector4f(this->X / length, this->Y / length, this->Z / length, this->W / length);
+	return Vector4f(X / length, Y / length, Z / length, W / length);
 }
 
 Vector4f Vector4f::Negative() const
 {
-	return Vector4f(-this->X, -this->Y, -this->Z, -this->W);
+	return Vector4f(-X, -Y, -Z, -W);
 }
 
 Vector4f& Vector4f::Negate()
 {
-	this->X = -this->X;
-	this->Y = -this->Y;
-	this->Z = -this->Z;
-	this->W = -this->W;
+    X = -X;
+    Y = -Y;
+    Z = -Z;
+    W = -W;
 
 	return *this;
 }
 
 Vector4f& Vector4f::Abs()
 {
-	this->X = std::abs(this->X);
-	this->Y = std::abs(this->Y);
-	this->Z = std::abs(this->Z);
-	this->W = std::abs(this->W);
+    X = std::abs(X);
+    Y = std::abs(Y);
+    Z = std::abs(Z);
+    W = std::abs(W);
 
 	return *this;
 }
 
 Vector4f Vector4f::Cross(const Vector4f& vector) const
 {
-	float x = (this->Y * vector.Z) - (this->Z * vector.Y);
-	float y = (this->Z * vector.X) - (this->X * vector.Z);
-	float z = (this->X * vector.Y) - (this->Y * vector.X);
+    float x = (Y * vector.Z) - (Z * vector.Y);
+    float y = (Z * vector.X) - (X * vector.Z);
+    float z = (X * vector.Y) - (Y * vector.X);
 
 	return Vector4f(x, y, z, 1);
 }
@@ -144,27 +144,27 @@ float Vector4f::Magnitude() const
 
 float Vector4f::SquareMagnitude() const
 {
-	return (this->X * this->X) + (this->Y * this->Y) + (this->Z * this->Z) + (this->W * this->W);
+	return (X * X) + (Y * Y) + (Z * Z) + (W * W);
 }
 
 float Vector4f::Distance(const Vector4f& vector) const
 {
-	float a = this->X - vector.X;
-	float b = this->Y - vector.Y;
-	float c = this->Z - vector.Z;
-	float d = this->W - vector.W;
+    float a = X - vector.X;
+    float b = Y - vector.Y;
+    float c = Z - vector.Z;
+    float d = W - vector.W;
 
 	return sqrt((a * a) + (b * b) + (c * c) + (d * d));
 }
 
 float Vector4f::Dot(const Vector4f& vector) const
 {
-	return (this->X * vector.X) + (this->Y * vector.Y) + (this->Z * vector.Z) + (this->W * vector.W);
+	return (X * vector.X) + (Y * vector.Y) + (Z * vector.Z) + (W * vector.W);
 }
 
 float Vector4f::Max() const
 {
-	return std::max(this->X, std::max(this->Y, std::max(this->Z, this->W)));
+	return std::max(X, std::max(Y, std::max(Z, W)));
 }
 
 Vector4f Vector4f::Lerp(const Vector4f& start, const Vector4f& destination, float blend)
@@ -188,7 +188,7 @@ bool Vector4f::operator!=(const Vector4f& right) const
 // String Operations
 std::string Vector4f::ToString() const
 {
-	return "(" + std::to_string(this->X) + ", " + std::to_string(this->Y) + ", " + std::to_string(this->Z) + ", " + std::to_string(this->W) + ")";
+	return "(" + std::to_string(X) + ", " + std::to_string(Y) + ", " + std::to_string(Z) + ", " + std::to_string(W) + ")";
 }
 
 std::ostream& operator<<(std::ostream& stream, const Vector4f& right)

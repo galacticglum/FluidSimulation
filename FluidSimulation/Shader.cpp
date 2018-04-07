@@ -10,10 +10,10 @@ Shader::Shader(std::string vertexFilePath, std::string fragmentFilePath)
 		exit(1);
 	}
 
-	this->AddShader(vertexFilePath, GL_VERTEX_SHADER);
-	this->AddShader(fragmentFilePath, GL_FRAGMENT_SHADER);
-	this->LinkShaders();
-	this->DeleteShaders();
+	AddShader(vertexFilePath, GL_VERTEX_SHADER);
+	AddShader(fragmentFilePath, GL_FRAGMENT_SHADER);
+	LinkShaders();
+	DeleteShaders();
 }
 
 Shader::~Shader()
@@ -48,7 +48,7 @@ void Shader::AddShader(std::string filePath, GLenum shaderType)
 	}
 
 	glAttachShader(m_ProgramHandle, shader);
-	this->m_Shaders.push_back(shader);
+	m_Shaders.push_back(shader);
 }
 
 void Shader::LinkShaders()
@@ -84,7 +84,7 @@ void Shader::LinkShaders()
 
 void Shader::DeleteShaders()
 {
-	for (GLuint shader : this->m_Shaders)
+	for (GLuint shader : m_Shaders)
 	{
 		glDetachShader(m_ProgramHandle, shader);
 		glDeleteShader(shader);
@@ -100,5 +100,5 @@ void Shader::AddUniform(const std::string& uniformName)
 		exit(1);
 	}
 
-	this->m_Uniforms.insert(std::pair<std::string, GLuint>(uniformName, uniform));
+	m_Uniforms.insert(std::pair<std::string, GLuint>(uniformName, uniform));
 }

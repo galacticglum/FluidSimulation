@@ -54,10 +54,10 @@ struct Vector4f
 	inline friend Vector4f operator*(Vector4f left, float right) { return left.Multiply(right); }
 	inline friend Vector4f operator/(Vector4f left, float right) { return left.Divide(right); }
 
-	inline Vector4f& operator+=(const Vector4f& right) { return this->Add(right); }
-	inline Vector4f& operator-=(const Vector4f& right) { return this->Subtract(right); }
-	inline Vector4f& operator*=(const Vector4f& right) { return this->Multiply(right); }
-	inline Vector4f& operator/=(const Vector4f& right) { return this->Divide(right); }
+    inline Vector4f& operator+=(const Vector4f& right) { return Add(right); }
+    inline Vector4f& operator-=(const Vector4f& right) { return Subtract(right); }
+    inline Vector4f& operator*=(const Vector4f& right) { return Multiply(right); }
+    inline Vector4f& operator/=(const Vector4f& right) { return Divide(right); }
 
 	bool operator==(const Vector4f& right) const;
 	bool operator!=(const Vector4f& right) const;

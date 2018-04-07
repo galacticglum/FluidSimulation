@@ -22,9 +22,9 @@ public:
 	void Start();
 	void Stop();
 
-	inline int GetUPS() { return this->m_UpdatesPerSecond; }
-	inline int GetFPS() { return this->m_FramesPerSecond; }
-	inline Window* GetWindow() { return this->m_Window; }
+    inline int GetUPS() { return m_UpdatesPerSecond; }
+    inline int GetFPS() { return m_FramesPerSecond; }
+	inline Window* GetWindow() { return m_Window; }
 private:
 	std::string m_WindowTitle;
 	Window* m_Window;
