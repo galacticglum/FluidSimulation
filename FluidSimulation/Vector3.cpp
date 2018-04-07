@@ -2,7 +2,6 @@
 #include "Vector2.h"
 #include "Vector4.h"
 #include "Matrix4.h"
-#include "MathFunctions.h"
 
 const Vector3f Vector3f::Zero = Vector3f(0);
 const Vector3f Vector3f::One = Vector3f(1);

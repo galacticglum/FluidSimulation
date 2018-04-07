@@ -1,6 +1,6 @@
 #include "Vector4.h"
 #include "Matrix4.h"
-#include "MathFunctions.h"
+#include "Maths.h"
 
 const Vector4f Vector4f::Zero = Vector4f{ 0, 0, 0, 0 };
 const Vector4f Vector4f::One = Vector4f{ 1, 1, 1, 1 };

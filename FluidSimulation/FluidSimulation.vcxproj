@@ -77,8 +77,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Shon\Documents\Visual Studio 2017\Projects\FluidSimulation\Third Party\Includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Shon\Documents\Visual Studio 2017\Projects\FluidSimulation\Third Party\Libraries\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Third Party\Includes;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Third Party\Libraries\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -189,6 +189,7 @@
     <ClInclude Include="imgui\ImGuiSystem.h" />
     <ClInclude Include="imgui\imgui_internal.h" />
     <ClInclude Include="MathFunctions.h" />
+    <ClInclude Include="Maths.h" />
     <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb\stb_rect_pack.h" />

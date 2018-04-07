@@ -5,6 +5,8 @@
 #include <cmath>
 #include <algorithm>
 
+#include "Maths.h"
+
 struct Vector3f;
 struct Vector2f
 {

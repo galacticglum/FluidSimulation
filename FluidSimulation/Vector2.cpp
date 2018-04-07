@@ -1,6 +1,5 @@
 #include "Vector2.h"
 #include "Vector3.h"
-#include "MathFunctions.h"
 
 const Vector2f Vector2f::Zero = Vector2f(0, 0);
 const Vector2f Vector2f::One = Vector2f(1, 1);
