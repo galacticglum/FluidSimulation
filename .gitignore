@@ -14,7 +14,7 @@
 # Compiled Dynamic libraries
 *.so
 *.dylib
-#*.dll
+*.dll
 
 # Fortran module files
 *.mod
@@ -24,7 +24,7 @@
 *.lai
 *.la
 *.a
-#*.lib
+*.lib
 
 # Executables
 *.exe
@@ -52,6 +52,8 @@
 [Rr]eleases/
 x64/
 x86/
+!**/Third\ Party/**
+!**/Third\ Party/**
 bld/
 [Bb]in/
 [Oo]bj/
