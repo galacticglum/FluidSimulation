@@ -1,5 +1,4 @@
 #include "Vector4.h"
-#include "Matrix4.h"
 #include "Maths.h"
 
 const Vector4f Vector4f::Zero = Vector4f{ 0, 0, 0, 0 };
@@ -85,17 +84,6 @@ Vector4f& Vector4f::Divide(float right)
 	this->W /= right;
 
 	return *this;
-}
-
-Vector4f Vector4f::Multiply(const Matrix4f& matrix) const
-{
-	return Vector4f
-	(
-		matrix.GetRow(0).X * this->X + matrix.GetRow(0).Y * this->Y + matrix.GetRow(0).Z * this->Z + matrix.GetRow(0).W * this->W,
-		matrix.GetRow(1).X * this->X + matrix.GetRow(1).Y * this->Y + matrix.GetRow(1).Z * this->Z + matrix.GetRow(1).W * this->W,
-		matrix.GetRow(2).X * this->X + matrix.GetRow(2).Y * this->Y + matrix.GetRow(2).Z * this->Z + matrix.GetRow(2).W * this->W,
-		matrix.GetRow(3).X * this->X + matrix.GetRow(3).Y * this->Y + matrix.GetRow(3).Z * this->Z + matrix.GetRow(3).W * this->W
-	);
 }
 
 Vector4f& Vector4f::Normalize()

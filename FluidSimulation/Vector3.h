@@ -7,7 +7,6 @@
 
 struct Vector2f;
 struct Vector4f;
-struct Matrix4f;
 struct Vector3f
 {
 	float X, Y, Z;
@@ -29,8 +28,6 @@ struct Vector3f
 	Vector3f& Subtract(float right);
 	Vector3f& Multiply(float right);
 	Vector3f& Divide(float right);
-
-	Vector3f Multiply(const Matrix4f& matrix) const;
 
 	Vector3f& Normalize();
 	Vector3f Normalized() const;

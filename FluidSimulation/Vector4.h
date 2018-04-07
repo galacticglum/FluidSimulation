@@ -5,7 +5,6 @@
 
 #include "Vector3.h"
 
-struct Matrix4f;
 struct Vector4f
 {
 	float X, Y, Z, W;
@@ -25,8 +24,6 @@ struct Vector4f
 	Vector4f& Subtract(float right);
 	Vector4f& Multiply(float right);
 	Vector4f& Divide(float right);
-
-	Vector4f Multiply(const Matrix4f& matrix) const;
 
 	Vector4f& Normalize();
 	Vector4f Normalized() const;

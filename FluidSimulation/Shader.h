@@ -11,7 +11,6 @@
 #include "Vector2.h"
 #include "Vector3.h"
 #include "Vector4.h"
-#include "Matrix4.h"
 
 class Shader
 {
@@ -29,8 +28,7 @@ public:
 	inline void SetUniform(const std::string& uniformName, const Vector2f& value) { glUniform2f(m_Uniforms.at(uniformName), value.X, value.Y); }
 	inline void SetUniform(const std::string& uniformName, const Vector3f& value) { glUniform3f(m_Uniforms.at(uniformName), value.X, value.Y, value.Z); }
 	inline void SetUniform(const std::string& uniformName, const Vector4f& value) { glUniform4f(m_Uniforms.at(uniformName), value.X, value.Y, value.Z, value.W); }
-	inline void SetUniform(const std::string& uniformName, const Matrix4f& value) { glUniformMatrix4fv(this->m_Uniforms.at(uniformName), 1, GL_TRUE, &(value.Elements[0][0])); }
-	
+
 	inline void SetAttributeLocation(const std::string& attributeName, GLuint attributeLocation) { glBindAttribLocation(m_ProgramHandle, attributeLocation, attributeName.c_str()); }
 private:
 	int m_ProgramHandle;

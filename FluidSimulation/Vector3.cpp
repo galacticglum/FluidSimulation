@@ -1,7 +1,6 @@
 #include "Vector3.h"
 #include "Vector2.h"
 #include "Vector4.h"
-#include "Matrix4.h"
 
 const Vector3f Vector3f::Zero = Vector3f(0);
 const Vector3f Vector3f::One = Vector3f(1);
@@ -91,16 +90,6 @@ Vector3f& Vector3f::Divide(float right)
 	this->Z /= right;
 
 	return *this;
-}
-
-Vector3f Vector3f::Multiply(const Matrix4f& matrix) const
-{
-	return Vector3f
-	(
-		matrix.GetRow(0).X * this->X + matrix.GetRow(0).Y * this->Y + matrix.GetRow(0).Z * this->Z + matrix.GetRow(0).W,
-		matrix.GetRow(1).X * this->X + matrix.GetRow(1).Y * this->Y + matrix.GetRow(1).Z * this->Z + matrix.GetRow(1).W,
-		matrix.GetRow(2).X * this->X + matrix.GetRow(2).Y * this->Y + matrix.GetRow(2).Z * this->Z + matrix.GetRow(2).W
-	);
 }
 
 Vector3f& Vector3f::Normalize()

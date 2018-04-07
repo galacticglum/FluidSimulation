@@ -171,7 +171,6 @@
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Matrix4.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -190,7 +189,6 @@
     <ClInclude Include="imgui\imgui_internal.h" />
     <ClInclude Include="MathFunctions.h" />
     <ClInclude Include="Maths.h" />
-    <ClInclude Include="Matrix4.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb\stb_rect_pack.h" />
     <ClInclude Include="stb\stb_textedit.h" />
