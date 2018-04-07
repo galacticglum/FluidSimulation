@@ -2,6 +2,7 @@
 #include "Time.h"
 #include "Window.h"
 #include "imgui/ImGuiSystem.h"
+#include <thread>
 
 /**
  * \brief Initializes the game application.
@@ -100,10 +101,12 @@ void GameApplication::Run()
 
 void GameApplication::Initialize()
 {
+    m_FluidRenderer = std::make_unique<FluidRenderer>();
 }
 
-void GameApplication::Update(float deltaTime)
+void GameApplication::Update(const float deltaTime) const
 {
+    m_FluidRenderer->Update(deltaTime);
 }
 
 void GameApplication::Render() const

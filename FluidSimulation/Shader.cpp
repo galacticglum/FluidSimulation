@@ -62,7 +62,7 @@ void Shader::AddShader(const std::string& filePath, const GLenum shaderType)
 		GLchar shaderInfoLog[1024];
 		glGetShaderInfoLog(shader, 1024, nullptr, shaderInfoLog);
 
-		std::cout << "Shader::AddShader: Error compiling shader!\n";
+		std::cout << "Shader::AddShader: Error compiling shader: \"" << filePath << "\"\n";
 		std::cout << shaderInfoLog << "\n";
 		exit(1);
 	}

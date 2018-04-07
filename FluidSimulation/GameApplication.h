@@ -1,6 +1,7 @@
 #pragma once
 
-#include <thread>
+#include "FluidRenderer.h"
+#include <memory>
 
 class GameApplication
 {
@@ -30,10 +31,12 @@ private:
 	int m_Width;
 	int m_Height;
 
+    std::unique_ptr<FluidRenderer> m_FluidRenderer;
+
 	void Run();
 
     void Initialize();
-	void Update(float deltaTime);
+	void Update(float deltaTime) const;
 	void Render() const;
 	void OnGui() const;
     static void Shutdown();

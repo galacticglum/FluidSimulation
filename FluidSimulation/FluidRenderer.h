@@ -24,8 +24,9 @@ class FluidRenderer
 {
 public:
 	FluidRenderer();
-
 	FluidRendererSettings Settings;
+
+    void Update(float deltaTime);
 private:
 	std::stack<int> m_SplatStack;
 
@@ -50,9 +51,7 @@ private:
 
     Vector2f m_PreviousMousePosition;
 
-    void Update(float deltaTime);
-
-    void UpdateSplat(const Vector2f& position, const Vector2f& delta, const Vector4f& colour);
+    void UpdateSplat(const Vector2f& position, const Vector2f& direction, const Vector4f& colour);
     void BatchSplats(int amount);
 
     void InitializeFrameBuffers();

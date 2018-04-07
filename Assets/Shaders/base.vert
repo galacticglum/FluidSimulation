@@ -1,6 +1,3 @@
-precision highp float;
-precision mediump sampler2D;
-
 attribute vec2 position;
 attribute vec2 uv;
 attribute vec2 L;

@@ -1,6 +1,3 @@
-precision highp float;
-precision mediump sampler2D;
-
 varying vec2 uv;
 uniform sampler2D target;
 uniform float aspectRatio;

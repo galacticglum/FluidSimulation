@@ -1,6 +1,3 @@
-precision highp float;
-precision mediump sampler2D;
-
 varying vec2 uv;
 varying sampler2D velocity;
 varying sampler2D source;

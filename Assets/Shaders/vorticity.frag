@@ -1,6 +1,3 @@
-precision highp float;
-precision mediump sampler2D;
-
 varying vec2 uv;
 varying vec2 T;
 varying vec2 B;
