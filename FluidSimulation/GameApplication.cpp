@@ -1,7 +1,6 @@
 #include "GameApplication.h"
 #include "Time.h"
 #include "Window.h"
-#include "imgui/ImGuiSystem.h"
 #include <thread>
 #include <utility>
 #include "Input.h"
@@ -38,10 +37,6 @@ void GameApplication::Stop()
 
 void GameApplication::Run()
 {
-	// Initialize ImGui
-    ImGuiSystem::Init(Window::Get().GetGLFWwindow(), true);
-	ImGui::StyleColorsClassic();
-
 	m_Running = true;
 
 	double lastFrameTime = Time::GetTime();
@@ -90,7 +85,6 @@ void GameApplication::Run()
 		if (doRender)
 		{
 			Render();
-
 			frameCount++;
 		}
 		else
@@ -104,46 +98,41 @@ void GameApplication::Run()
 
 void GameApplication::Initialize()
 {
-    m_FluidRenderer = std::make_unique<FluidRenderer>();
+    //m_FluidRenderer = std::make_unique<FluidRenderer>();
+    glGenBuffers(1, &vboID);
+    static GLfloat vertices[] = { -1, -1, 1, -1, 0, 1 };
+
+    glBindBuffer(GL_ARRAY_BUFFER, vboID);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6, vertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void GameApplication::Update(const float deltaTime) const
+void GameApplication::Update(const float deltaTime)
 {
 }
 
-void GameApplication::Render() const
+void GameApplication::Render()
 {
     Window& window = Window::Get();
     window.MakeContextCurrent();
+
     Window::Clear();
+    //m_FluidRenderer->Update(m_FrameTime);
 
-	ImGuiSystem::NewFrame();
-	OnGui();
-	ImGui::Render();
+    m_TestShaderProgram = Shader("Assets/Shaders/test.vert", "Assets/Shaders/test.frag");
+    m_TestShaderProgram.Bind();
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, vboID);
 
-    m_FluidRenderer->Update(m_FrameTime);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 2, nullptr);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glDisableVertexAttribArray(0);
+
     window.Update();
-}
-
-ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
-void GameApplication::OnGui() const
-{
-	{
-		static float f = 0.0f;
-		ImGui::Text("Hello, world!");                           // Some text (you can use a format string too)
-		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float as a slider from 0.0f to 1.0f
-        if (ImGui::ColorEdit3("clear color", reinterpret_cast<float*>(&clear_color)))
-        {
-            Window::SetClearColour(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-        }
-
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	}
 }
 
 void GameApplication::Shutdown()
 {
-    Shader::FreeCache();
-	ImGuiSystem::Shutdown();
 }

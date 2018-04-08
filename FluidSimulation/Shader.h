@@ -1,9 +1,8 @@
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <vector>
 #include <map>
+#include <vector>
+#include <string>
 
 #include <GL/glew.h>
 
@@ -36,15 +35,13 @@ public:
     void SetUniform(const std::string& uniformName, const Vector4f& value) { glUniform4f(m_Uniforms.at(uniformName), value.X, value.Y, value.Z, value.W); }
 
     void SetAttributeLocation(const std::string& attributeName, GLuint attributeLocation) const;
-
-    static void FreeCache();
 private:
-	int m_ProgramHandle{};
+	GLuint m_ProgramHandle{};
 
+    std::vector<GLuint> m_Shaders;
 	std::map<std::string, GLuint> m_Uniforms;
-    static std::map<std::string, GLuint> s_ShaderCache;
 
-	void AddShader(const std::string& filePath, GLenum shaderType) const;
+	void AddShader(const std::string& filePath, GLenum shaderType);
 	void LinkShaders() const;
     void DetachShaders() const;
 };

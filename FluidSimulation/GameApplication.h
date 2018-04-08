@@ -31,13 +31,15 @@ private:
 	int m_Width;
 	int m_Height;
 
+    Shader m_TestShaderProgram;
+    GLuint vboID;
+
     std::unique_ptr<FluidRenderer> m_FluidRenderer;
     
 	void Run();
 
     void Initialize();
-	void Update(float deltaTime) const;
-	void Render() const;
-	void OnGui() const;
+	void Update(float deltaTime);
+	void Render();
     static void Shutdown();
 };

@@ -21,14 +21,14 @@ FluidRenderer::FluidRenderer(): m_TextureWidth(0), m_TextureHeight(0)
 
     InitializeFrameBuffers();
     GenerateBlitSurface();
-    BatchSplats(Random::Value() * 20 + 5);
+    BatchSplats(static_cast<int>(Random::Value() * 20 + 5));
 }
 
 void FluidRenderer::Update(const float deltaTime)
 {
     glViewport(0, 0, m_TextureWidth, m_TextureHeight);
 
-    if(!m_SplatStack.empty())
+    /*if(!m_SplatStack.empty())
     {
         const int size = m_SplatStack.top();
         m_SplatStack.pop();
@@ -87,6 +87,7 @@ void FluidRenderer::Update(const float deltaTime)
     Blit(m_DivergenceFrameBufferObject);
 
     m_ClearProgramShader.Bind();
+
     glActiveTexture(GL_TEXTURE0 + m_PressureFrameBufferObject.GetReadBuffer().TextureId);
     glBindTexture(GL_TEXTURE_2D, m_PressureFrameBufferObject.GetReadBuffer().Texture);
     m_ClearProgramShader.SetUniform("texture", m_PressureFrameBufferObject.GetReadBuffer().TextureId);
@@ -98,6 +99,7 @@ void FluidRenderer::Update(const float deltaTime)
     m_PressureProgramShader.Bind();
     m_PressureProgramShader.SetUniform("texelSize", Vector2f(1.0f / m_TextureWidth, 1.0f / m_TextureHeight));
     m_PressureProgramShader.SetUniform("divergence", m_DivergenceFrameBufferObject.TextureId);
+
     m_PressureProgramShader.SetUniform("pressure", m_PressureFrameBufferObject.GetReadBuffer().TextureId);
     glActiveTexture(GL_TEXTURE0 + m_PressureFrameBufferObject.GetReadBuffer().TextureId);
     for (int i = 0; i < Settings.PressureIterations; ++i)
@@ -112,7 +114,7 @@ void FluidRenderer::Update(const float deltaTime)
     m_GradientProgramShader.SetUniform("pressure", m_PressureFrameBufferObject.GetReadBuffer().TextureId);
     m_GradientProgramShader.SetUniform("velocity", m_VelocityFrameBufferObject.GetReadBuffer().TextureId);
     Blit(m_VelocityFrameBufferObject.GetWriteBuffer());
-    m_VelocityFrameBufferObject.Swap();
+    m_VelocityFrameBufferObject.Swap();*/
 
     Window& window = Window::Get();
     const int windowWidth = window.GetWidth();
@@ -120,8 +122,9 @@ void FluidRenderer::Update(const float deltaTime)
     glViewport(0, 0, windowWidth, windowHeight);
 
     m_DisplayProgramShader.Bind();
-    m_DisplayProgramShader.SetUniform("texture", m_DensityFrameBufferObject.GetReadBuffer().TextureId);
+    //m_DisplayProgramShader.SetUniform("texture", m_DensityFrameBufferObject.GetReadBuffer().TextureId);
     Blit(FrameBufferObject::Empty);
+    Shader::Unbind();
 }
 
 void FluidRenderer::UpdateSplat(const Vector2f& position, const Vector2f& direction, const Vector4f& colour)
@@ -189,15 +192,18 @@ void FluidRenderer::GenerateBlitSurface()
     glGenBuffers(1, &m_BlitSurfaceIndexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_BlitSurfaceIndexBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLint) * 6, s_BlitSurfaceIndices, GL_STATIC_DRAW);
+
 }
 
 void FluidRenderer::Blit(const FrameBufferObject& frameBufferObject) const
 {
-    glBindBuffer(GL_ARRAY_BUFFER, m_BlitSurfaceVertexBuffer);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glBindBuffer(GL_ARRAY_BUFFER, m_BlitSurfaceVertexBuffer);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 2, nullptr);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_BlitSurfaceIndexBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, frameBufferObject.ObjectHandle);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+    glDisableVertexAttribArray(0);
 }
