@@ -98,6 +98,7 @@ void GameApplication::Run()
 
 void GameApplication::Initialize()
 {
+    m_TestShaderProgram = Shader("Assets/Shaders/test.vert", "Assets/Shaders/test.frag");
     //m_FluidRenderer = std::make_unique<FluidRenderer>();
     glGenBuffers(1, &vboID);
     static GLfloat vertices[] = { -1, -1, 1, -1, 0, 1 };
@@ -119,7 +120,6 @@ void GameApplication::Render()
     Window::Clear();
     //m_FluidRenderer->Update(m_FrameTime);
 
-    m_TestShaderProgram = Shader("Assets/Shaders/test.vert", "Assets/Shaders/test.frag");
     m_TestShaderProgram.Bind();
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vboID);

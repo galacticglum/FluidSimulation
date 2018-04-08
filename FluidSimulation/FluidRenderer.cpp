@@ -28,7 +28,7 @@ void FluidRenderer::Update(const float deltaTime)
 {
     glViewport(0, 0, m_TextureWidth, m_TextureHeight);
 
-    /*if(!m_SplatStack.empty())
+    if(!m_SplatStack.empty())
     {
         const int size = m_SplatStack.top();
         m_SplatStack.pop();
@@ -114,7 +114,7 @@ void FluidRenderer::Update(const float deltaTime)
     m_GradientProgramShader.SetUniform("pressure", m_PressureFrameBufferObject.GetReadBuffer().TextureId);
     m_GradientProgramShader.SetUniform("velocity", m_VelocityFrameBufferObject.GetReadBuffer().TextureId);
     Blit(m_VelocityFrameBufferObject.GetWriteBuffer());
-    m_VelocityFrameBufferObject.Swap();*/
+    m_VelocityFrameBufferObject.Swap();
 
     Window& window = Window::Get();
     const int windowWidth = window.GetWidth();
