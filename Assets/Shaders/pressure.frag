@@ -1,12 +1,16 @@
-varying vec2 uv;
-varying vec2 L;
-varying vec2 R;
-varying vec2 T;
-varying vec2 B;
+#version 450
+
+in vec2 uv;
+in vec2 L;
+in vec2 R;
+in vec2 T;
+in vec2 B;
+out vec4 fragColour;
+
 uniform sampler2D pressure;
 uniform sampler2D divergence;
 
-vec2 bounds(int vec2 uv)
+vec2 bounds(in vec2 uv)
 {
     uv = min(max(uv, 0.0), 1.0);
     return uv;
@@ -19,7 +23,8 @@ void main()
     float presureT = texture2D(pressure, bounds(T)).x;
     float pressureB = texture2D(pressure, bounds(B)).x;
     float pressureUv = texture2D(pressure, uv).x;
-    float div = texture2D(divergence, uv).x;
-    float p = (pressureL + pressureR + pressureB + presureT - div) * 0.25;
-    gl_FragColor = vec4(pressure, 0.0, 0.0, 1.0);
+    float dv = texture2D(divergence, uv).x;
+    float p = (pressureL + pressureR + pressureB + presureT - dv) * 0.25;
+
+    fragColour = vec4(p, 0.0, 0.0, 1.0);
 }

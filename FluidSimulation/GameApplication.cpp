@@ -3,6 +3,8 @@
 #include "Window.h"
 #include "imgui/ImGuiSystem.h"
 #include <thread>
+#include <utility>
+#include "Input.h"
 
 /**
  * \brief Initializes the game application.
@@ -11,8 +13,8 @@
  * \param windowTitle The title of the game window.
  * \param frameRate The target framerate to run at.
  */
-GameApplication::GameApplication(const int width, const int height, const std::string& windowTitle, const double frameRate) :
-    m_WindowTitle(windowTitle), m_Running(false), m_FrameTime(1.0 / frameRate), m_UpdatesPerSecond(0),
+GameApplication::GameApplication(const int width, const int height, std::string windowTitle, const double frameRate) :
+    m_WindowTitle(std::move(windowTitle)), m_Running(false), m_FrameTime(1.0 / frameRate), m_UpdatesPerSecond(0),
     m_FramesPerSecond(0),
     m_Width(width), m_Height(height)
 {
@@ -77,6 +79,7 @@ void GameApplication::Run()
 				Stop();
 			}
 
+            Input::Update();
 			Update(static_cast<float>(m_FrameTime));
 
 			doRender = true;
@@ -106,24 +109,22 @@ void GameApplication::Initialize()
 
 void GameApplication::Update(const float deltaTime) const
 {
-    m_FluidRenderer->Update(deltaTime);
 }
 
 void GameApplication::Render() const
 {
     Window& window = Window::Get();
     window.MakeContextCurrent();
-	window.Update();
+    Window::Clear();
 
 	ImGuiSystem::NewFrame();
 	OnGui();
-
-    Window::Clear();
 	ImGui::Render();
+
+    m_FluidRenderer->Update(m_FrameTime);
+    window.Update();
 }
 
-bool show_demo_window = true;
-bool show_another_window = false;
 ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 void GameApplication::OnGui() const
@@ -136,28 +137,13 @@ void GameApplication::OnGui() const
         {
             Window::SetClearColour(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
         }
-		if (ImGui::Button("Demo Window"))                       // Use buttons to toggle our bools. We could use Checkbox() as well.
-			show_demo_window ^= 1;
-		if (ImGui::Button("Another Window"))
-			show_another_window ^= 1;
+
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-	}
-
-	if (show_another_window)
-	{
-		ImGui::Begin("Another Window", &show_another_window);
-		ImGui::Text("Hello from another window!");
-		ImGui::End();
-	}
-
-	if (show_demo_window)
-	{
-		ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
-		ImGui::ShowDemoWindow(&show_demo_window);
 	}
 }
 
 void GameApplication::Shutdown()
 {
+    Shader::FreeCache();
 	ImGuiSystem::Shutdown();
 }

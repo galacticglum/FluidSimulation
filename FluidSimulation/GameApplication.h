@@ -12,7 +12,7 @@ public:
     GameApplication(const int width, const int height, const std::string& windowTitle) : 
 		GameApplication(width, height, windowTitle, 60) {}
 
-    GameApplication(int width, int height, const std::string& windowTitle, double frameRate);
+    GameApplication(int width, int height, std::string windowTitle, double frameRate);
 
 	void Start();
 	void Stop();
@@ -32,7 +32,7 @@ private:
 	int m_Height;
 
     std::unique_ptr<FluidRenderer> m_FluidRenderer;
-
+    
 	void Run();
 
     void Initialize();

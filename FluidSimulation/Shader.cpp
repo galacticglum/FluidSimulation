@@ -1,5 +1,7 @@
-#include "Shader.h"
+﻿#include "Shader.h"
 #include "File.h"
+
+std::map<std::string, GLuint> Shader::s_ShaderCache;
 
 Shader::Shader(const std::string& vertexFilePath, const std::string& fragmentFilePath)
 {
@@ -13,21 +15,20 @@ Shader::Shader(const std::string& vertexFilePath, const std::string& fragmentFil
 	AddShader(vertexFilePath, GL_VERTEX_SHADER);
 	AddShader(fragmentFilePath, GL_FRAGMENT_SHADER);
 	LinkShaders();
+    DetachShaders();
 
-    GLint uniformCount;
-    glGetProgramiv(m_ProgramHandle, GL_ACTIVE_UNIFORMS, &uniformCount);
+    GLint activeUniforms = 0;
+    glGetProgramiv(m_ProgramHandle, GL_ACTIVE_UNIFORMS, &activeUniforms);
 
-    const GLsizei uniformMaxNameLength = 16;
-    GLchar name[uniformMaxNameLength];
-    GLsizei uniformNameLength;
+    const GLsizei bufferSize = 256;
+    GLchar name[bufferSize];
+    GLsizei length;
 
-    for (int i = 0; i < uniformCount; ++i)
+    for (int i = 0; i < activeUniforms; ++i)
     {
-        glGetActiveUniformName(m_ProgramHandle, static_cast<GLuint>(i), uniformMaxNameLength, &uniformNameLength, name);
+        glGetActiveUniformName(m_ProgramHandle, i, bufferSize, &length, name);
         AddUniform(name);
     }
-
-	DeleteShaders();
 }
 
 Shader::~Shader()
@@ -40,35 +41,52 @@ void Shader::SetAttributeLocation(const std::string& attributeName, const GLuint
     glBindAttribLocation(m_ProgramHandle, attributeLocation, attributeName.c_str());
 }
 
-void Shader::AddShader(const std::string& filePath, const GLenum shaderType)
+void Shader::FreeCache()
 {
-	std::string shaderFile = File::Read(filePath);
-    const int shader = glCreateShader(shaderType);
+    for(auto const& pair : s_ShaderCache)
+    {
+        glDeleteShader(pair.second);
+    }
+}
 
-	if (shader == GL_FALSE)
-	{
-		std::cout << "Shader::AddShader: Error creating shader! Could not generate shader buffer.\n";
-		exit(1);
-	}
+void Shader::AddShader(const std::string& filePath, const GLenum shaderType) const
+{
+    GLuint shader;
+    if(s_ShaderCache.find(filePath) == s_ShaderCache.end())
+    {
+        std::string shaderFile = File::Read(filePath);
+        shader = glCreateShader(shaderType);
 
-	const char* file = shaderFile.c_str();
-	glShaderSource(shader, 1, &file, nullptr);
-	glCompileShader(shader);
+        if (shader == GL_FALSE)
+        {
+            std::cout << "Shader::AddShader: Error creating shader! Could not generate shader buffer.\n";
+            exit(1);
+        }
 
-	GLint compileStatus;
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
-	if (compileStatus == GL_FALSE)
-	{
-		GLchar shaderInfoLog[1024];
-		glGetShaderInfoLog(shader, 1024, nullptr, shaderInfoLog);
+        const char* file = shaderFile.c_str();
+        glShaderSource(shader, 1, &file, nullptr);
+        glCompileShader(shader);
 
-		std::cout << "Shader::AddShader: Error compiling shader: \"" << filePath << "\"\n";
-		std::cout << shaderInfoLog << "\n";
-		exit(1);
-	}
+        GLint compileStatus;
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
+        if (compileStatus == GL_FALSE)
+        {
+            GLchar shaderInfoLog[1024];
+            glGetShaderInfoLog(shader, 1024, nullptr, shaderInfoLog);
 
+            std::cout << "Shader::AddShader: Error compiling shader: \"" << filePath << "\"\n";
+            std::cout << shaderInfoLog << "\n";
+            exit(1);
+        }
+
+        s_ShaderCache.insert(std::pair<std::string, GLuint>(filePath, shader));
+    }
+    else
+    {
+        shader = s_ShaderCache.at(filePath);
+    }
+	
 	glAttachShader(m_ProgramHandle, shader);
-	m_Shaders.push_back(shader);
 }
 
 void Shader::LinkShaders() const
@@ -77,7 +95,7 @@ void Shader::LinkShaders() const
 
 	GLint linkStatus;
 	glGetProgramiv(m_ProgramHandle, GL_LINK_STATUS, &linkStatus);
-	if (linkStatus = GL_FALSE)
+	if (linkStatus == GL_FALSE)
 	{
 		GLchar programInfoLog[1024];
 		glGetProgramInfoLog(m_ProgramHandle, 1024, nullptr, programInfoLog);
@@ -102,12 +120,11 @@ void Shader::LinkShaders() const
 	}
 }
 
-void Shader::DeleteShaders()
-{
-	for (GLuint shader : m_Shaders)
+void Shader::DetachShaders() const
+{ 
+	for (auto const& pair : s_ShaderCache)
 	{
-		glDetachShader(m_ProgramHandle, shader);
-		glDeleteShader(shader);
+		glDetachShader(m_ProgramHandle, pair.second);
 	}
 }
 

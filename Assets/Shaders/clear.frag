@@ -1,8 +1,12 @@
-varying vec2 uv;
-varying sampler2D texture;
+#version 450
+
+in vec2 uv;
+out vec4 fragColour;
+
+uniform sampler2D texture;
 uniform float value;
 
 void main() 
 {
-    gl_FragColor = value * texture2D(texture, uv);
+    fragColour = value * texture2D(texture, uv);
 }

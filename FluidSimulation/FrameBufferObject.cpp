@@ -1,5 +1,7 @@
 #include "FrameBufferObject.h"
 
+const FrameBufferObject& FrameBufferObject::Empty = {};
+
 FrameBufferObject::FrameBufferObject(const GLint textureId, const GLsizei width, const GLsizei height, const GLenum internalFormat, const GLenum format, 
     const GLenum type, const GLint param)
 {

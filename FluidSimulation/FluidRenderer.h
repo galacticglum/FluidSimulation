@@ -55,5 +55,13 @@ private:
     void BatchSplats(int amount);
 
     void InitializeFrameBuffers();
-    static void Blit(const FrameBufferObject& frameBufferObject);
+
+    GLuint m_BlitSurfaceVertexBuffer{};
+    GLuint m_BlitSurfaceIndexBuffer{};
+
+    static const GLfloat s_BlitSurfaceVertices[];
+    static const GLint s_BlitSurfaceIndices[];
+
+    void GenerateBlitSurface();
+    void Blit(const FrameBufferObject& frameBufferObject) const;
 };
